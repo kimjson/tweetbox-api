@@ -1,12 +1,12 @@
 import 'reflect-metadata';
-import express, { Request, Response } from 'express';
+import express from 'express';
 import passport from 'passport';
 import { Strategy as TwitterStrategy, Profile } from 'passport-twitter';
 import { createConnection, getCustomRepository } from 'typeorm';
 
 import { getConfiguration } from './utils/configuration';
-import { User } from './entities/user';
 import { UserRepository } from './repositories/user';
+import { AuthRouter } from './routers/auth';
 
 type DoneCallback = (error: any, user?: any) => void;
 
@@ -32,13 +32,7 @@ createConnection().then((connection) => {
     ),
   );
 
-  app.get('/', (req: Request, res: Response) => {
-    res.send('Hello World!');
-  });
-
-  app.post('/', (req: Request, res: Response) => {
-    res.json(req.body);
-  });
+  app.use('/auth', AuthRouter);
 
   app.listen(3000, () => {
     console.log('Example app listening on port 3000!');
